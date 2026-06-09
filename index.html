@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>篮球传奇殿堂 | NBA巨星风采</title>
-    <!-- 引入 Google Fonts 提升字体质感 -->
+    <title>篮球传奇殿堂 | 增强版 - 球星数据排序/收藏/球队筛选</title>
+    <!-- 引入 Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 (免费图标库) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -23,7 +22,6 @@
             scroll-behavior: smooth;
         }
 
-        /* 背景篮球纹理效果 */
         body::before {
             content: "";
             position: fixed;
@@ -38,520 +36,446 @@
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem 1.5rem;
             position: relative;
             z-index: 2;
         }
 
-        /* 头部区域 */
         .hero {
             text-align: center;
-            margin-bottom: 3rem;
-            padding: 1.5rem 0.5rem;
+            margin-bottom: 2rem;
+            padding: 1rem 0.5rem;
             border-bottom: 2px solid rgba(255, 140, 0, 0.3);
         }
         .hero h1 {
             font-family: 'Oswald', sans-serif;
-            font-size: 3.5rem;
+            font-size: 3rem;
             letter-spacing: 2px;
             background: linear-gradient(135deg, #FFB347, #FF7E05);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #ccd6f0;
-            margin-top: 0.8rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .hero i {
-            color: #ff8c00;
-            margin: 0 5px;
         }
 
-        /* 筛选栏 + 搜索 */
-        .controls {
+        /* 控件栏：筛选，排序，随机 */
+        .toolbar {
             display: flex;
             flex-wrap: wrap;
+            gap: 1rem;
             justify-content: space-between;
             align-items: center;
-            gap: 1rem;
-            background: rgba(20, 28, 44, 0.7);
+            background: rgba(20, 28, 44, 0.8);
             backdrop-filter: blur(8px);
-            border-radius: 60px;
+            border-radius: 40px;
             padding: 0.8rem 1.8rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
             border: 1px solid rgba(255, 140, 0, 0.3);
         }
-        .filter-group {
+        .filter-group, .sort-group {
             display: flex;
-            gap: 0.6rem;
+            gap: 0.5rem;
             flex-wrap: wrap;
+            align-items: center;
         }
-        .filter-btn {
+        .filter-btn, .sort-btn, .random-btn {
             background: transparent;
             border: 1px solid #3b4a6b;
             color: #e2e8f0;
-            padding: 0.5rem 1.2rem;
+            padding: 0.4rem 1rem;
             border-radius: 40px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: 0.2s;
         }
-        .filter-btn.active, .filter-btn:hover {
+        .filter-btn.active, .sort-btn.active, .filter-btn:hover, .sort-btn:hover {
             background: #ff7e05;
             border-color: #ff7e05;
             color: #0a0f1e;
-            box-shadow: 0 4px 12px rgba(255, 126, 5, 0.3);
+        }
+        .random-btn {
+            background: #ff7e05;
+            border-color: #ff7e05;
+            color: #0a0f1e;
+        }
+        .random-btn:hover {
+            background: #e06e00;
+            transform: scale(0.97);
         }
         .search-box {
             display: flex;
             align-items: center;
             background: #0f1422;
             border-radius: 40px;
-            padding: 0.3rem 1rem;
+            padding: 0.2rem 1rem;
             border: 1px solid #2d3a5e;
-        }
-        .search-box i {
-            color: #ff8c66;
-            margin-right: 8px;
         }
         .search-box input {
             background: transparent;
             border: none;
-            padding: 0.6rem 0;
-            font-size: 1rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
             color: white;
-            width: 180px;
+            width: 160px;
             outline: none;
         }
-        .search-box input::placeholder {
-            color: #8e9bb5;
-        }
 
-        /* 明星卡片网格 */
+        /* 卡片网格 */
         .players-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 2rem;
+            gap: 1.8rem;
             margin-top: 1rem;
         }
 
-        /* 卡片设计 */
         .card {
             background: rgba(18, 25, 45, 0.85);
             backdrop-filter: blur(4px);
             border-radius: 32px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.2s, box-shadow 0.2s;
             border: 1px solid rgba(255, 140, 0, 0.2);
-            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.4);
+            position: relative;
         }
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 35px -12px rgba(0,0,0,0.6);
-            border-color: rgba(255, 126, 5, 0.6);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -10px black;
+            border-color: #ff7e05;
+        }
+        .fav-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #ccc;
+            transition: 0.2s;
+            z-index: 5;
+            background: rgba(0,0,0,0.4);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fav-icon.fav-active {
+            color: #ff3b3b;
+            text-shadow: 0 0 5px red;
         }
         .card-img {
-            height: 230px;
+            height: 210px;
             background-size: cover;
-            background-position: center top;
+            background-position: center;
             position: relative;
             display: flex;
             align-items: flex-end;
-            justify-content: flex-start;
-            padding: 1rem;
+            padding: 0.8rem;
         }
         .card-img span {
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.6);
             backdrop-filter: blur(4px);
-            font-weight: bold;
-            font-size: 0.8rem;
-            padding: 0.3rem 0.8rem;
+            padding: 0.2rem 0.8rem;
             border-radius: 30px;
-            color: #ffbc6e;
-            font-family: monospace;
+            font-size: 0.7rem;
+            font-weight: bold;
         }
         .card-content {
-            padding: 1.5rem;
+            padding: 1.2rem;
         }
         .player-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            font-family: 'Oswald', sans-serif;
-            letter-spacing: 1px;
-            margin-bottom: 0.2rem;
             display: flex;
             justify-content: space-between;
             align-items: baseline;
+            flex-wrap: wrap;
         }
         .player-name h3 {
-            font-size: 1.7rem;
+            font-size: 1.5rem;
+            font-family: 'Oswald', sans-serif;
         }
         .position {
             background: #ff7e0522;
-            padding: 0.2rem 0.8rem;
+            padding: 0.2rem 0.7rem;
             border-radius: 40px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             color: #ffae6e;
-            border: 0.5px solid #ff8c33;
         }
         .team {
             color: #b9c7e0;
-            margin: 0.5rem 0;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+            margin: 0.4rem 0;
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-        .team i {
-            width: 20px;
-            color: #ffa559;
+            gap: 6px;
         }
         .stats {
             display: flex;
-            gap: 1rem;
-            margin: 1rem 0;
-            font-size: 0.85rem;
+            gap: 0.6rem;
+            margin: 0.7rem 0;
             background: #0b1120;
-            padding: 0.6rem;
+            padding: 0.5rem;
             border-radius: 24px;
-        }
-        .stats div {
-            flex: 1;
             text-align: center;
         }
-        .stats .stat-value {
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: #ffaa55;
-        }
+        .stats div { flex: 1; }
+        .stat-value { font-weight: 800; font-size: 1rem; color: #ffaa55; }
         .desc {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #b9c7e0;
-            margin-top: 0.6rem;
             border-top: 1px dashed #2f3b5e;
-            padding-top: 0.8rem;
+            padding-top: 0.6rem;
+        }
+        .no-result {
+            text-align: center;
+            padding: 3rem;
+            grid-column: 1/-1;
+            background: rgba(0,0,0,0.4);
+            border-radius: 48px;
+        }
+        @media (max-width: 700px) {
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .filter-group, .sort-group { justify-content: center; }
         }
         .footer-note {
             text-align: center;
-            margin-top: 3rem;
-            color: #7a86a3;
-            font-size: 0.8rem;
-            border-top: 1px solid #1e2a44;
-            padding-top: 1.8rem;
-        }
-        @media (max-width: 650px) {
-            .controls {
-                flex-direction: column;
-                border-radius: 30px;
-                align-items: stretch;
-            }
-            .filter-group {
-                justify-content: center;
-            }
-            .search-box {
-                justify-content: space-between;
-            }
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-        }
-        /* 无结果提示 */
-        .no-result {
-            text-align: center;
-            padding: 4rem;
-            font-size: 1.3rem;
-            background: rgba(0,0,0,0.3);
-            border-radius: 60px;
-            grid-column: 1 / -1;
+            margin-top: 2.5rem;
+            font-size: 0.75rem;
+            color: #6c7a9e;
         }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="hero">
-        <h1><i class="fas fa-basketball-ball"></i> 篮坛巨星殿堂 <i class="fas fa-trophy"></i></h1>
-        <p>传奇永不落幕 — 探索NBA历史与现役超级巨星 <i class="fas fa-fire"></i> 荣耀、数据与经典瞬间</p>
+        <h1><i class="fas fa-basketball-ball"></i> 篮坛传奇 · 增强殿堂 <i class="fas fa-star"></i></h1>
+        <p>新增6位巨星 | 球队筛选 | 得分/冠军排序 | 收藏❤️ | 随机推荐</p>
     </div>
 
-    <div class="controls">
-        <div class="filter-group">
-            <button class="filter-btn active" data-filter="all">全部球星</button>
-            <button class="filter-btn" data-filter="传奇">🏆 传奇名宿</button>
-            <button class="filter-btn" data-filter="现役">⚡ 现役巨星</button>
-            <button class="filter-btn" data-filter="后卫">🎯 后卫</button>
-            <button class="filter-btn" data-filter="前锋">🏀 前锋</button>
-            <button class="filter-btn" data-filter="中锋">📏 中锋</button>
+    <div class="toolbar">
+        <div class="filter-group" id="teamFilterGroup">
+            <button class="filter-btn active" data-team="all">🏀 全部球队</button>
+            <button class="filter-btn" data-team="湖人">💜💛 湖人</button>
+            <button class="filter-btn" data-team="公牛">🐂 公牛</button>
+            <button class="filter-btn" data-team="勇士">🌊 勇士</button>
+            <button class="filter-btn" data-team="马刺">🏰 马刺</button>
+            <button class="filter-btn" data-team="凯尔特人">🍀 凯尔特人</button>
+            <button class="filter-btn" data-team="76人">🔔 76人</button>
+            <button class="filter-btn" data-team="独行侠">🐴 独行侠</button>
+            <button class="filter-btn" data-team="雄鹿">🦌 雄鹿</button>
+            <button class="filter-btn" data-team="掘金">⛏️ 掘金</button>
+            <button class="filter-btn" data-team="热火">🔥 热火</button>
+        </div>
+        <div class="sort-group">
+            <button class="sort-btn" data-sort="default">⭐ 默认</button>
+            <button class="sort-btn" data-sort="points">📊 场均得分 ↓</button>
+            <button class="sort-btn" data-sort="rings">🏆 总冠军数 ↓</button>
+            <button class="sort-btn" data-sort="mvp">🏅 MVP数 ↓</button>
         </div>
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="搜索球星姓名...">
+            <input type="text" id="searchInput" placeholder="搜索球星...">
         </div>
+        <button class="random-btn" id="randomBtn"><i class="fas fa-dice-d6"></i> 随机推荐</button>
     </div>
 
-    <div class="players-grid" id="playersGrid">
-        <!-- 动态渲染js -->
-    </div>
+    <div class="players-grid" id="playersGrid"></div>
     <div class="footer-note">
-        <i class="fas fa-globe"></i> 致敬传奇 | 数据参考NBA官方及篮球名人堂 | 热爱永不熄
+        <i class="fas fa-heart" style="color:#ff7e05;"></i> 点击爱心收藏球星 (本地保存) | 数据参考经典&现役传奇
     </div>
 </div>
 
 <script>
-    // ------------- 篮球明星数据 -------------
+    // ---------- 增强数据库 (原12+新增6=18位) 新增球队标识便于筛选----------
     const playersData = [
-        {
-            id: 1,
-            name: "迈克尔·乔丹",
-            engName: "Michael Jordan",
-            position: "得分后卫",
-            category: ["传奇", "后卫"],
-            team: "芝加哥公牛 / 华盛顿奇才",
-            points: "30.1 PPG",
-            rings: "6× NBA总冠军",
-            mvps: "5× MVP",
-            desc: "篮球之神，六冠王朝，历史最伟大得分后卫，定义了一个时代。",
-            image: "https://images.unsplash.com/photo-1587280501635-6a2c6f2ab3c9?q=80&w=2070&auto=format", // 篮球抽象图，但实际乔丹经典风格
-            customImg: true
-        },
-        {
-            id: 2,
-            name: "勒布朗·詹姆斯",
-            engName: "LeBron James",
-            position: "小前锋",
-            category: ["现役", "前锋"],
-            team: "洛杉矶湖人",
-            points: "27.2 PPG",
-            rings: "4× NBA总冠军",
-            mvps: "4× MVP",
-            desc: "天选之子，历史总得分王，全能战士，21世纪标杆。",
-            image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2090&auto=format"
-        },
-        {
-            id: 3,
-            name: "科比·布莱恩特",
-            engName: "Kobe Bryant",
-            position: "得分后卫",
-            category: ["传奇", "后卫"],
-            team: "洛杉矶湖人",
-            points: "25.0 PPG",
-            rings: "5× NBA总冠军",
-            mvps: "1× MVP",
-            desc: "黑曼巴精神，81分奇迹，永不言弃的杀手本能。",
-            image: "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?q=80&w=1887&auto=format"
-        },
-        {
-            id: 4,
-            name: "斯蒂芬·库里",
-            engName: "Stephen Curry",
-            position: "控球后卫",
-            category: ["现役", "后卫"],
-            team: "金州勇士",
-            points: "24.7 PPG",
-            rings: "4× NBA总冠军",
-            mvps: "2× MVP",
-            desc: "三分革命引领者，历史最强射手，全票MVP。",
-            image: "https://images.unsplash.com/photo-1607187277576-6bf10ba8d6b7?q=80&w=2070&auto=format"
-        },
-        {
-            id: 5,
-            name: "沙奎尔·奥尼尔",
-            engName: "Shaquille O'Neal",
-            position: "中锋",
-            category: ["传奇", "中锋"],
-            team: "洛杉矶湖人 / 魔术 / 热火",
-            points: "23.7 PPG",
-            rings: "4× NBA总冠军",
-            mvps: "1× MVP",
-            desc: "内线绝对统治力，三连FMVP，禁区巨无霸。",
-            image: "https://images.unsplash.com/photo-1551782453-df5f9a9b9f6c?q=80&w=2070&auto=format"
-        },
-        {
-            id: 6,
-            name: "凯文·杜兰特",
-            engName: "Kevin Durant",
-            position: "小前锋 / 大前锋",
-            category: ["现役", "前锋"],
-            team: "菲尼克斯太阳",
-            points: "27.3 PPG",
-            rings: "2× NBA总冠军",
-            mvps: "1× MVP",
-            desc: "死神镰刀，历史顶级得分手，四届得分王。",
-            image: "https://images.unsplash.com/photo-1612872087720-bb87628ad2bb?q=80&w=2007&auto=format"
-        },
-        {
-            id: 7,
-            name: "蒂姆·邓肯",
-            engName: "Tim Duncan",
-            position: "大前锋 / 中锋",
-            category: ["传奇", "前锋", "中锋"],
-            team: "圣安东尼奥马刺",
-            points: "19.0 PPG",
-            rings: "5× NBA总冠军",
-            mvps: "2× MVP",
-            desc: "石佛，历史第一大前锋，低调的伟大。",
-            image: "https://images.unsplash.com/photo-1597076651957-9a76d3ca2e07?q=80&w=1974&auto=format"
-        },
-        {
-            id: 8,
-            name: "扬尼斯·阿德托昆博",
-            engName: "Giannis Antetokounmpo",
-            position: "大前锋",
-            category: ["现役", "前锋"],
-            team: "密尔沃基雄鹿",
-            points: "29.9 PPG",
-            rings: "1× NBA总冠军",
-            mvps: "2× MVP",
-            desc: "希腊怪兽，攻防一体，率队夺冠+FMVP。",
-            image: "https://images.unsplash.com/photo-1582642023386-48e1a9fcdedc?q=80&w=1974&auto=format"
-        },
-        {
-            id: 9,
-            name: "拉里·伯德",
-            engName: "Larry Bird",
-            position: "小前锋",
-            category: ["传奇", "前锋"],
-            team: "波士顿凯尔特人",
-            points: "24.3 PPG",
-            rings: "3× NBA总冠军",
-            mvps: "3× MVP",
-            desc: "垃圾话之王，全能白人前锋，凯尔特人图腾。",
-            image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1888&auto=format"
-        },
-        {
-            id: 10,
-            name: "魔术师约翰逊",
-            engName: "Magic Johnson",
-            position: "控球后卫",
-            category: ["传奇", "后卫"],
-            team: "洛杉矶湖人",
-            points: "19.5 PPG",
-            rings: "5× NBA总冠军",
-            mvps: "3× MVP",
-            desc: "Showtime缔造者，历史第一控卫。",
-            image: "https://images.unsplash.com/photo-1622279749165-b37f7b5ebede?q=80&w=1976&auto=format"
-        },
-        {
-            id: 11,
-            name: "尼古拉·约基奇",
-            engName: "Nikola Jokic",
-            position: "中锋",
-            category: ["现役", "中锋"],
-            team: "丹佛掘金",
-            points: "24.5 PPG",
-            rings: "1× NBA总冠军",
-            mvps: "2× MVP",
-            desc: "塞尔维亚魔术师，策应型中锋巅峰，2023总冠军。",
-            image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1935&auto=format"
-        },
-        {
-            id: 12,
-            name: "阿伦·艾弗森",
-            engName: "Allen Iverson",
-            position: "控球后卫",
-            category: ["传奇", "后卫"],
-            team: "费城76人",
-            points: "26.7 PPG",
-            rings: "0",
-            mvps: "1× MVP",
-            desc: "答案，crossover之王，斗志永存。",
-            image: "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=1965&auto=format"
-        }
+        { id:1, name:"迈克尔·乔丹", eng:"Michael Jordan", position:"得分后卫", teamLabel:"公牛", points:30.1, rings:6, mvps:5, desc:"篮球之神，六冠王朝。", img:"https://images.unsplash.com/photo-1587280501635-6a2c6f2ab3c9?q=80&w=2070&auto=format" },
+        { id:2, name:"勒布朗·詹姆斯", eng:"LeBron James", position:"小前锋", teamLabel:"湖人", points:27.2, rings:4, mvps:4, desc:"历史得分王，全能战士。", img:"https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2090&auto=format" },
+        { id:3, name:"科比·布莱恩特", eng:"Kobe Bryant", position:"得分后卫", teamLabel:"湖人", points:25.0, rings:5, mvps:1, desc:"黑曼巴精神，81分。", img:"https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?q=80&w=1887&auto=format" },
+        { id:4, name:"斯蒂芬·库里", eng:"Stephen Curry", position:"控球后卫", teamLabel:"勇士", points:24.7, rings:4, mvps:2, desc:"三分革命引领者。", img:"https://images.unsplash.com/photo-1607187277576-6bf10ba8d6b7?q=80&w=2070&auto=format" },
+        { id:5, name:"沙奎尔·奥尼尔", eng:"Shaquille O'Neal", position:"中锋", teamLabel:"湖人", points:23.7, rings:4, mvps:1, desc:"内线霸主，三连FMVP。", img:"https://images.unsplash.com/photo-1551782453-df5f9a9b9f6c?q=80&w=2070&auto=format" },
+        { id:6, name:"凯文·杜兰特", eng:"Kevin Durant", position:"前锋", teamLabel:"太阳", points:27.3, rings:2, mvps:1, desc:"死神镰刀，顶级得分手。", img:"https://images.unsplash.com/photo-1612872087720-bb87628ad2bb?q=80&w=2007&auto=format" },
+        { id:7, name:"蒂姆·邓肯", eng:"Tim Duncan", position:"大前锋", teamLabel:"马刺", points:19.0, rings:5, mvps:2, desc:"历史第一大前锋。", img:"https://images.unsplash.com/photo-1597076651957-9a76d3ca2e07?q=80&w=1974&auto=format" },
+        { id:8, name:"扬尼斯·阿德托昆博", eng:"Giannis", position:"大前锋", teamLabel:"雄鹿", points:29.9, rings:1, mvps:2, desc:"希腊怪兽，攻防一体。", img:"https://images.unsplash.com/photo-1582642023386-48e1a9fcdedc?q=80&w=1974&auto=format" },
+        { id:9, name:"拉里·伯德", eng:"Larry Bird", position:"小前锋", teamLabel:"凯尔特人", points:24.3, rings:3, mvps:3, desc:"垃圾话之王，绿军传奇。", img:"https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1888&auto=format" },
+        { id:10, name:"魔术师约翰逊", eng:"Magic Johnson", position:"控卫", teamLabel:"湖人", points:19.5, rings:5, mvps:3, desc:"Showtime缔造者。", img:"https://images.unsplash.com/photo-1622279749165-b37f7b5ebede?q=80&w=1976&auto=format" },
+        { id:11, name:"尼古拉·约基奇", eng:"Jokic", position:"中锋", teamLabel:"掘金", points:24.5, rings:1, mvps:2, desc:"塞尔维亚魔术师，2023总冠军。", img:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1935&auto=format" },
+        { id:12, name:"阿伦·艾弗森", eng:"Iverson", position:"控卫", teamLabel:"76人", points:26.7, rings:0, mvps:1, desc:"答案，crossover之王。", img:"https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=1965&auto=format" },
+        // ========= 新增球星6位 ==========
+        { id:13, name:"德维恩·韦德", eng:"Dwyane Wade", position:"得分后卫", teamLabel:"热火", points:22.0, rings:3, mvps:0, desc:"闪电侠，2006总决赛神迹。", img:"https://images.unsplash.com/photo-1582642242636-6a6b5c5f53b4?q=80&w=1974&auto=format" },
+        { id:14, name:"詹姆斯·哈登", eng:"James Harden", position:"得分后卫", teamLabel:"76人", points:24.1, rings:0, mvps:1, desc:"欧洲步+后撤步，三届得分王。", img:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1935&auto=format" },
+        { id:15, name:"科怀·伦纳德", eng:"Kawhi Leonard", position:"小前锋", teamLabel:"快船", points:19.6, rings:2, mvps:0, desc:"机器人，两届FMVP。", img:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1935&auto=format" },
+        { id:16, name:"卢卡·东契奇", eng:"Luka Doncic", position:"控卫/锋卫", teamLabel:"独行侠", points:28.7, rings:0, mvps:0, desc:"新生代持球大核，技巧顶级。", img:"https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2090&auto=format" },
+        { id:17, name:"乔尔·恩比德", eng:"Joel Embiid", position:"中锋", teamLabel:"76人", points:27.2, rings:0, mvps:1, desc:"大帝，攻防一体MVP。", img:"https://images.unsplash.com/photo-1582642023386-48e1a9fcdedc?q=80&w=1974&auto=format" },
+        { id:18, name:"维克托·文班亚马", eng:"Wembanyama", position:"中锋/大前", teamLabel:"马刺", points:21.4, rings:0, mvps:0, desc:"外星人新秀，盖帽王。", img:"https://images.unsplash.com/photo-1587280501635-6a2c6f2ab3c9?q=80&w=2070&auto=format" }
     ];
 
-    // 补充更美观的备用图片确保每个卡片都有视觉（有些unsplash可能偏抽象，但风格一致）
-    // 确保不破坏体验，加后备样式
-    function renderCards(players) {
+    // 本地收藏 key
+    let favorites = JSON.parse(localStorage.getItem('bball_favorites') || '[]');
+
+    // 当前UI状态
+    let currentTeam = "all";
+    let currentSort = "default";
+    let currentSearch = "";
+
+    // 辅助: 保存收藏到localStorage
+    function saveFavorites() {
+        localStorage.setItem('bball_favorites', JSON.stringify(favorites));
+    }
+
+    function toggleFavorite(playerId) {
+        const idx = favorites.indexOf(playerId);
+        if(idx === -1) {
+            favorites.push(playerId);
+        } else {
+            favorites.splice(idx,1);
+        }
+        saveFavorites();
+        renderFilteredAndSorted(); // 刷新界面
+    }
+
+    // 排序逻辑
+    function sortPlayers(players, sortType) {
+        if(sortType === "default") return [...players];
+        if(sortType === "points") return [...players].sort((a,b) => b.points - a.points);
+        if(sortType === "rings") return [...players].sort((a,b) => b.rings - a.rings);
+        if(sortType === "mvp") return [...players].sort((a,b) => b.mvps - a.mvps);
+        return players;
+    }
+
+    // 综合筛选 + 搜索 + 排序
+    function getFilteredPlayers() {
+        let result = [...playersData];
+        // 球队筛选
+        if(currentTeam !== "all") {
+            result = result.filter(p => p.teamLabel === currentTeam);
+        }
+        // 搜索
+        if(currentSearch.trim() !== "") {
+            const kw = currentSearch.trim().toLowerCase();
+            result = result.filter(p => p.name.toLowerCase().includes(kw) || p.eng.toLowerCase().includes(kw));
+        }
+        // 排序
+        result = sortPlayers(result, currentSort);
+        return result;
+    }
+
+    // 渲染卡片
+    function renderFilteredAndSorted() {
+        const filtered = getFilteredPlayers();
         const grid = document.getElementById('playersGrid');
-        if(!players.length) {
-            grid.innerHTML = `<div class="no-result"><i class="fas fa-dizzy"></i> 没有找到相关球星，试试其他关键词或筛选条件～</div>`;
+        if(filtered.length === 0) {
+            grid.innerHTML = `<div class="no-result"><i class="fas fa-frown"></i> 没有找到符合条件的球星，试试其他球队或关键词~</div>`;
             return;
         }
         let html = '';
-        players.forEach(player => {
-            // 处理个性分类tag显示
-            let posClass = player.position;
-            let categoryBadges = '';
-            if(player.category.includes('传奇')) categoryBadges = '<span class="position" style="background:#c96e1f40;">🏅 传奇</span>';
-            else if(player.category.includes('现役')) categoryBadges = '<span class="position" style="background:#2c5f2d40;">🔥 现役</span>';
-            else categoryBadges = '<span class="position">⭐ 球星</span>';
-
-            // 动态背景图片 （确保图片可以加载，使用data中image）
-            const imgUrl = player.image || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2070&auto=format';
+        filtered.forEach(p => {
+            const isFav = favorites.includes(p.id);
+            const favClass = isFav ? 'fav-active' : '';
+            const ringText = p.rings === 0 ? "0冠" : `${p.rings}冠`;
+            const mvpText = p.mvps === 0 ? "0" : `${p.mvps}`;
+            // 补全球队logo模拟
+            let teamIcon = "🏀";
+            if(p.teamLabel === "湖人") teamIcon = "💜💛";
+            else if(p.teamLabel === "公牛") teamIcon = "🐂";
+            else if(p.teamLabel === "勇士") teamIcon = "🌊";
+            else if(p.teamLabel === "马刺") teamIcon = "🏰";
+            else if(p.teamLabel === "凯尔特人") teamIcon = "🍀";
+            else if(p.teamLabel === "76人") teamIcon = "🔔";
+            else if(p.teamLabel === "独行侠") teamIcon = "🐴";
+            else if(p.teamLabel === "雄鹿") teamIcon = "🦌";
+            else if(p.teamLabel === "掘金") teamIcon = "⛏️";
+            else if(p.teamLabel === "热火") teamIcon = "🔥";
+            else if(p.teamLabel === "太阳") teamIcon = "☀️";
+            else if(p.teamLabel === "快船") teamIcon = "⛵";
+            
             html += `
-                <div class="card" data-name="${player.name.toLowerCase()}" data-categories="${player.category.join(',')}">
-                    <div class="card-img" style="background-image: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0.2)), url('${imgUrl}');">
-                        <span><i class="fas fa-medal"></i> ${player.rings ? player.rings.split('×')[0] : '0'}冠</span>
+                <div class="card" data-id="${p.id}">
+                    <div class="fav-icon ${favClass}" data-id="${p.id}">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="card-img" style="background: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0.2)), url('${p.img}'); background-size: cover;">
+                        <span><i class="fas fa-medal"></i> ${ringText}</span>
                     </div>
                     <div class="card-content">
                         <div class="player-name">
-                            <h3>${player.name}</h3>
-                            ${categoryBadges}
+                            <h3>${p.name}</h3>
+                            <span class="position">${p.position}</span>
                         </div>
-                        <div class="team"><i class="fas fa-shirt"></i> ${player.team}</div>
+                        <div class="team"><i class="fas fa-tshirt"></i> ${teamIcon} ${p.teamLabel}</div>
                         <div class="stats">
-                            <div><div class="stat-value">${player.points}</div><div>场均得分</div></div>
-                            <div><div class="stat-value">${player.mvps}</div><div>常规赛MVP</div></div>
-                            <div><div class="stat-value">${player.rings}</div><div>总冠军</div></div>
+                            <div><div class="stat-value">${p.points}</div><div>场均得分</div></div>
+                            <div><div class="stat-value">${mvpText}</div><div>MVP</div></div>
+                            <div><div class="stat-value">${p.rings}</div><div>总冠军</div></div>
                         </div>
-                        <div class="desc">
-                            <i class="fas fa-quote-left"></i> ${player.desc}<br>
-                            <span style="font-size:0.7rem;">🏀 ${player.position} | ${player.engName}</span>
-                        </div>
+                        <div class="desc"><i class="fas fa-quote-left"></i> ${p.desc}<br><span style="font-size:0.7rem;">🏀 ${p.eng}</span></div>
                     </div>
                 </div>
             `;
         });
         grid.innerHTML = html;
-    }
 
-    let currentFilter = "all";
-    let currentSearch = "";
-
-    function filterAndSearch() {
-        let filtered = [...playersData];
-        // 类别筛选
-        if(currentFilter !== "all") {
-            filtered = filtered.filter(player => player.category.includes(currentFilter));
-        }
-        // 搜索关键字
-        if(currentSearch.trim() !== "") {
-            const kw = currentSearch.trim().toLowerCase();
-            filtered = filtered.filter(player => player.name.toLowerCase().includes(kw) || player.engName.toLowerCase().includes(kw));
-        }
-        renderCards(filtered);
-    }
-
-    // 绑定筛选按钮事件
-    const btns = document.querySelectorAll('.filter-btn');
-    btns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            btns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const filterVal = btn.getAttribute('data-filter');
-            currentFilter = filterVal;
-            filterAndSearch();
+        // 绑定收藏按钮事件
+        document.querySelectorAll('.fav-icon').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const pid = parseInt(el.getAttribute('data-id'));
+                toggleFavorite(pid);
+            });
         });
-    });
+    }
 
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', (e) => {
-        currentSearch = e.target.value;
-        filterAndSearch();
-    });
+    // 随机推荐
+    function randomRecommend() {
+        const allPlayers = [...playersData];
+        if(allPlayers.length === 0) return;
+        const randIndex = Math.floor(Math.random() * allPlayers.length);
+        const lucky = allPlayers[randIndex];
+        alert(`🏀 今日推荐球星：${lucky.name} (${lucky.eng})\n${lucky.position} | ${lucky.teamLabel} | 场均${lucky.points}分 | ${lucky.rings}冠\n“${lucky.desc}”`);
+        // 可选高亮滚动? 简单提示后自动把筛选重置但不清爽，可选跳转？ 这里简单提示即可
+    }
 
-    // 初始化加载全部
-    renderCards(playersData);
+    // 绑定事件
+    function bindEvents() {
+        // 球队筛选
+        document.querySelectorAll('#teamFilterGroup .filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('#teamFilterGroup .filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTeam = btn.getAttribute('data-team');
+                renderFilteredAndSorted();
+            });
+        });
+        // 排序
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentSort = btn.getAttribute('data-sort');
+                renderFilteredAndSorted();
+            });
+        });
+        // 搜索
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            currentSearch = e.target.value;
+            renderFilteredAndSorted();
+        });
+        // 随机
+        document.getElementById('randomBtn').addEventListener('click', randomRecommend);
+    }
+
+    // 初始化
+    function init() {
+        bindEvents();
+        renderFilteredAndSorted();
+    }
+    init();
 </script>
 </body>
 </html>
